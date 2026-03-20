@@ -145,7 +145,7 @@ const es = {
     body:          'Estoy disponible para proyectos freelance, posiciones full-time o simplemente para charlar sobre tecnología y seguridad. Respondo en menos de 24 horas.',
     downloadCV:    'Descargar CV',
     linkedinLabel: 'LinkedIn',
-    footer:        'Construido con React · Tailwind CSS · Framer Motion',
+    footer:        'Hecho con amor, café y una pizca de IA ☕',
   },
 }
 
