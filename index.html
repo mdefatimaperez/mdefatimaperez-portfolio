@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portfolio de Maria de Fatima Perez — Junior Developer & Cybersecurity Learner." />
+    <meta name="theme-color" content="#0D0D14" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>Maria de Fatima Perez — Portfolio</title>
+    <script type="module" crossorigin src="/assets/index-BbaWYpaI.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BxQuVhYT.css">
+  </head>
+  <body>
+    <!--
+      Canvas de fondo: z-index 0, detrás de todo el contenido (main tiene z-index 1).
+      mask-image: degradé vertical que desvanece las estrellas hacia abajo del viewport.
+      pointer-events: none para no interferir con clicks.
+    -->
+    <canvas
+      id="stars-canvas"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+      "
+    ></canvas>
+
+    <div id="root"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         STARFIELD — Canvas 2D, sin dependencias externas
+         ═══════════════════════════════════════════════════════════ -->
+    <script>
+      (function () {
+        'use strict';
+
+        const canvas = document.getElementById('stars-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        /* ── Configuración ──────────────────────────────────────── */
+        const MOBILE_BP  = 768;
+        const COUNT_FULL = 120;
+        const COUNT_MOB  = 60;
+        const getCount   = () => window.innerWidth < MOBILE_BP ? COUNT_MOB : COUNT_FULL;
+
+        /* ── Estado global ──────────────────────────────────────── */
+        let particles = [];
+        let rafId     = null;
+        let tick      = 0;
+
+        /* ── Resize del canvas ──────────────────────────────────── */
+        function resize() {
+          canvas.width  = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+
+        /* ── Utilidades ─────────────────────────────────────────── */
+        function rand(a, b) {
+          return Math.random() * (b - a) + a;
+        }
+
+        /* ── Fábrica de partículas ──────────────────────────────── */
+        /**
+         * @param {boolean} scattered  true → distribuir por todo el canvas (init),
+         *                             false → aparece por arriba (recycle)
+         */
+        function makeParticle(scattered) {
+          const isStar   = Math.random() < 0.28;   // 28 % con forma de estrella
+          const baseOpacity = rand(0.3, 1.0);
+          return {
+            x:      rand(0, canvas.width),
+            y:      scattered ? rand(0, canvas.height) : rand(-16, -2),
+            r:      isStar ? rand(1.2, 2.8) : rand(0.7, 1.8),
+            vx:     rand(-0.08, 0.08),
+            vy:     rand(0.12, 0.48),
+            base:   baseOpacity,
+            opacity: baseOpacity,
+            twinkle: Math.random() < 0.42,
+            tSpeed:  rand(0.5, 2.2),
+            tPhase:  rand(0, Math.PI * 2),
+            isStar,
+            points:  Math.random() < 0.5 ? 4 : 6,  // 4 o 6 puntas
+          };
+        }
+
+        /* ── Dibujo: círculo sólido ─────────────────────────────── */
+        function drawDot(x, y, r, alpha) {
+          ctx.globalAlpha = alpha;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, 6.2832);
+          ctx.fill();
+        }
+
+        /* ── Dibujo: estrella de N puntas ───────────────────────── */
+        function drawStar(x, y, outerR, points, alpha) {
+          const innerR = outerR * 0.38;
+          const step   = Math.PI / points;
+          ctx.globalAlpha = alpha;
+          ctx.beginPath();
+          for (let i = 0; i < points * 2; i++) {
+            const angle  = i * step - Math.PI / 2;
+            const radius = (i % 2 === 0) ? outerR : innerR;
+            const px = x + radius * Math.cos(angle);
+            const py = y + radius * Math.sin(angle);
+            i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        /* ── Actualizar física ──────────────────────────────────── */
+        function update() {
+          tick++;
+          for (const p of particles) {
+            /* Movimiento */
+            p.x += p.vx;
+            p.y += p.vy;
+
+            /* Titileo — oscila opacidad con Math.sin */
+            if (p.twinkle) {
+              const t = tick * p.tSpeed * 0.035 + p.tPhase;
+              p.opacity = p.base * (0.35 + 0.65 * (Math.sin(t) * 0.5 + 0.5));
+            }
+
+            /* Reciclaje: sale por abajo → reaparece arriba con X aleatoria */
+            if (p.y > canvas.height + 10) {
+              const n = makeParticle(false);
+              Object.assign(p, n);
+            }
+
+            /* Wrap horizontal */
+            if      (p.x < -8)                 p.x = canvas.width  + 8;
+            else if (p.x > canvas.width  + 8)  p.x = -8;
+          }
+        }
+
+        /* ── Renderizar frame ───────────────────────────────────── */
+        function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#ffffff';
+
+          for (const p of particles) {
+            if (p.isStar) {
+              drawStar(p.x, p.y, p.r, p.points, p.opacity);
+            } else {
+              drawDot(p.x, p.y, p.r, p.opacity);
+            }
+          }
+
+          /* Restaurar globalAlpha para evitar side-effects */
+          ctx.globalAlpha = 1;
+        }
+
+        /* ── Loop principal ─────────────────────────────────────── */
+        function loop() {
+          update();
+          draw();
+          rafId = requestAnimationFrame(loop);
+        }
+
+        /* ── Inicialización ─────────────────────────────────────── */
+        function init() {
+          resize();
+          particles = Array.from({ length: getCount() }, () => makeParticle(true));
+          if (rafId) cancelAnimationFrame(rafId);
+          rafId = null;
+          tick  = 0;
+          loop();
+        }
+
+        /* ── Resize: debounce 150 ms para no regenerar continuamente ─ */
+        let resizeTimer;
+        window.addEventListener('resize', function () {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(init, 150);
+        });
+
+        init();
+      })();
+    </script>
+  </body>
+</html>
