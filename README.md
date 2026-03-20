@@ -6,7 +6,7 @@
 
 ## Español 🇦🇷
 
-Sitio web de portafolio personal que contiene un perfil dual como **Desarrollador Full Stack** y **Especialista en Ciberseguridad**, con soporte bilingüe (Español / English) y animaciones interactivas.
+Sitio web de portafolio personal que contiene un perfil dual como **Junior Developer & Cybersecurity Learner**, con soporte bilingüe (Español / English) y animaciones interactivas.
 
 ### Caracteristicas
 
