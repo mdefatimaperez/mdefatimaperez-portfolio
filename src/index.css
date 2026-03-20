@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Sobre Mí ───────────────────────────────────────────────── */
+#sobre-mi {
+  background: #0D0D14;
+  padding: 5rem 2rem;
+  position: relative;
+}
+
+.sobre-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid #1E1640;
+  border-radius: 16px;
+  overflow: hidden;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.sobre-texto {
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  border-right: 1px solid #1E1640;
+}
+
+.sobre-tag {
+  display: inline-block;
+  background: #1E1640;
+  color: #BBA9FF;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  width: fit-content;
+  letter-spacing: 0.05em;
+}
+
+.sobre-nombre {
+  font-size: clamp(22px, 4vw, 32px);
+  color: #EDE9FF;
+  font-weight: 500;
+  margin: 0;
+}
+
+.sobre-rol {
+  font-size: 13px;
+  color: #9D72F0;
+  font-weight: 500;
+  margin: 0;
+}
+
+.sobre-divider {
+  width: 32px;
+  height: 1px;
+  background: #1E1640;
+}
+
+.sobre-bio {
+  font-size: 13px;
+  color: #4D4273;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.sobre-bio span {
+  color: #BBA9FF;
+}
+
+.sobre-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skill-chip {
+  font-size: 11px;
+  color: #D8CFFF;
+  background: #12101E;
+  border: 1px solid #1E1640;
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+
+.sobre-canvas {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+}
+
+#orbit-canvas {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .sobre-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sobre-texto {
+    border-right: none;
+    border-bottom: 1px solid #1E1640;
+  }
+
+  .sobre-canvas {
+    height: 280px;
+  }
+}
+
+/* ─── Design tokens ──────────────────────────────────────────── */
+:root {
+  --bg-primary:    #0D0D14;
+  --bg-surface:    #12101E;
+  --bg-elevated:   #1A1030;
+  --border-subtle: #1E1640;
+
+  --violet-cta:    #7B4FD4;
+  --violet-hover:  #9D72F0;
+  --violet-mid:    #BBA9FF;
+  --violet-light:  #D8CFFF;
+
+  --text-primary:  #EDE9FF;
+  --text-muted:    #4D4273;
+  --text-white:    #FFFFFF;
+}
+
+/* ─── Base ───────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+  }
+
+  #root {
+    width: 100%;
+    text-align: left;
+  }
+
+  /* Focus ring global — aplica a todos los elementos focusables */
+  :focus-visible {
+    outline: 2px solid var(--violet-cta);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
