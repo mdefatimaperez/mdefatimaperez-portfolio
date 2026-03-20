@@ -6,20 +6,26 @@ import FullStackProfile from './FullStackProfile'
 import CyberProfile from './CyberProfile'
 
 const slideVariants = {
-  enter: (dir) => ({
+  enter: {
     opacity: 0,
-    x: dir === 'right' ? 60 : -60,
-  }),
+    y: 16,
+  },
   center: {
     opacity: 1,
-    x: 0,
-    transition: { duration: 0.4, ease: 'easeOut' },
+    y: 0,
+    transition: {
+      opacity: { duration: 0.4, ease: 'easeOut' },
+      y: { type: 'spring', stiffness: 180, damping: 24, mass: 1 },
+    },
   },
-  exit: (dir) => ({
+  exit: {
     opacity: 0,
-    x: dir === 'right' ? -60 : 60,
-    transition: { duration: 0.25, ease: 'easeIn' },
-  }),
+    y: -8,
+    transition: {
+      opacity: { duration: 0.2, ease: 'easeIn' },
+      y: { duration: 0.2, ease: 'easeIn' },
+    },
+  },
 }
 
 export default function ProfileToggle() {
@@ -94,7 +100,7 @@ export default function ProfileToggle() {
               🔐
             </span>
             <div>
-              <p className="font-medium text-base leading-tight">Cybersecurity Specialist</p>
+              <p className="font-medium text-base leading-tight">Cybersecurity Tools</p>
               <p className={`text-[13px] mt-0.5 ${activeProfile === 'cyber' ? 'text-violet-light' : 'text-text-muted'}`}>
                 {t.profileToggle.cyberSub}
               </p>
@@ -133,11 +139,10 @@ export default function ProfileToggle() {
         </AnimatePresence>
 
         {/* Contenido animado */}
-        <AnimatePresence mode="wait" custom={direction}>
+        <AnimatePresence mode="wait">
           {activeProfile === 'fullstack' && (
             <motion.div
               key="fullstack"
-              custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"
@@ -150,7 +155,6 @@ export default function ProfileToggle() {
           {activeProfile === 'cyber' && (
             <motion.div
               key="cyber"
-              custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"

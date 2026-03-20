@@ -9,6 +9,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-28 px-6 border-t border-border-subtle">
+      <CVModal isOpen={cvModalOpen} onClose={() => setCvModalOpen(false)} />
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -71,7 +72,6 @@ export default function Contact() {
             </svg>
             {t.contact.downloadCV}
           </button>
-          <CVModal isOpen={cvModalOpen} onClose={() => setCvModalOpen(false)} />
         </div>
 
         {/* Cierre */}
