@@ -4,9 +4,9 @@
 
 ---
 
-## Español
+## Español 🇦🇷
 
-Sitio web de portafolio personal que contiene un perfil dual como **Desarrollador Full Stack** y **Especialista en Ciberseguridad**, con soporte bilingüe (Español / English) y animaciones interactivas.
+Sitio web de portafolio personal que contiene un perfil dual como **Junior Developer & Cybersecurity Learner**, con soporte bilingüe (Español / English) y animaciones interactivas.
 
 ### Caracteristicas
 
@@ -94,7 +94,7 @@ MIT — libre de usar, modificar y distribuir.
 
 ---
 
-## English
+## English 🇺🇸
 
 Personal portfolio website featuring a dual profile as **Full Stack Developer** and **Cybersecurity Specialist**, with bilingual support (Spanish / English) and interactive animations.
 
